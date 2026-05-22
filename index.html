@@ -1,483 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Customer Consent Portal</title>
-  <style>
-    /* ── Reset & Base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f4f8;
-      color: #2d3748;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Header ── */
-    header {
-      background: linear-gradient(135deg, #1a365d, #2b6cb0);
-      color: #fff;
-      padding: 20px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    header .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-    header .logo span { color: #90cdf4; }
-    header nav a {
-      color: #bee3f8;
-      text-decoration: none;
-      margin-left: 20px;
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-    header nav a:hover { color: #fff; }
-
-    /* ── Hero Banner ── */
-    .hero {
-      background: linear-gradient(135deg, #2b6cb0, #4299e1);
-      color: white;
-      text-align: center;
-      padding: 50px 20px 40px;
-    }
-    .hero h1 { font-size: 2rem; margin-bottom: 10px; }
-    .hero p  { font-size: 1.05rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
-
-    /* ── Main Container ── */
-    main {
-      flex: 1;
-      max-width: 760px;
-      width: 100%;
-      margin: 40px auto;
-      padding: 0 16px 40px;
-    }
-
-    /* ── Info Box ── */
-    .info-box {
-      background: #ebf8ff;
-      border-left: 4px solid #3182ce;
-      border-radius: 6px;
-      padding: 16px 20px;
-      margin-bottom: 28px;
-      font-size: 0.95rem;
-      color: #2c5282;
-    }
-    .info-box strong { display: block; margin-bottom: 6px; font-size: 1rem; }
-
-    /* ── Consent Card ── */
-    .consent-card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-      padding: 36px 40px;
-      margin-bottom: 28px;
-    }
-    .consent-card h2 {
-      font-size: 1.2rem;
-      color: #1a365d;
-      border-bottom: 2px solid #bee3f8;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-
-    /* ── Form Groups ── */
-    .form-group {
-      margin-bottom: 18px;
-    }
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-      color: #2d3748;
-    }
-    .form-group label .required {
-      color: #e53e3e;
-      margin-left: 3px;
-    }
-    .form-group input[type="text"],
-    .form-group input[type="email"] {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid #cbd5e0;
-      border-radius: 7px;
-      font-size: 0.95rem;
-      color: #2d3748;
-      background: #f7fafc;
-      transition: border-color 0.25s, box-shadow 0.25s;
-      outline: none;
-    }
-    .form-group input:focus {
-      border-color: #4299e1;
-      box-shadow: 0 0 0 3px rgba(66,153,225,0.2);
-      background: #fff;
-    }
-
-    /* ── Consent Options ── */
-    .consent-options { margin-top: 6px; }
-    .consent-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 14px 16px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      background: #f7fafc;
-      transition: border-color 0.2s, background 0.2s;
-      cursor: pointer;
-    }
-    .consent-item:hover { border-color: #90cdf4; background: #ebf8ff; }
-    .consent-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
-      accent-color: #3182ce;
-      flex-shrink: 0;
-      cursor: pointer;
-    }
-    .consent-item .item-text strong {
-      display: block;
-      font-size: 0.95rem;
-      color: #1a365d;
-      margin-bottom: 3px;
-    }
-    .consent-item .item-text p {
-      font-size: 0.85rem;
-      color: #718096;
-      line-height: 1.5;
-    }
-    .badge {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 10px;
-      margin-left: 6px;
-      vertical-align: middle;
-    }
-    .badge-required { background: #fed7d7; color: #c53030; }
-    .badge-optional { background: #c6f6d5; color: #276749; }
-
-    /* ── Withdraw Section ── */
-    .withdraw-section {
-      background: #fff5f5;
-      border: 1.5px dashed #fc8181;
-      border-radius: 8px;
-      padding: 16px 18px;
-      margin-top: 20px;
-    }
-    .withdraw-section h3 {
-      font-size: 0.95rem;
-      color: #c53030;
-      margin-bottom: 8px;
-    }
-    .withdraw-section p {
-      font-size: 0.85rem;
-      color: #742a2a;
-      line-height: 1.5;
-    }
-    .withdraw-section a {
-      color: #c53030;
-      font-weight: 600;
-      text-decoration: underline;
-    }
-
-    /* ── Privacy Policy ── */
-    .privacy-note {
-      font-size: 0.85rem;
-      color: #718096;
-      margin-top: 18px;
-      line-height: 1.6;
-    }
-    .privacy-note a {
-      color: #3182ce;
-      font-weight: 600;
-      text-decoration: none;
-    }
-    .privacy-note a:hover { text-decoration: underline; }
-
-    /* ── Buttons ── */
-    .btn-group {
-      display: flex;
-      gap: 14px;
-      margin-top: 28px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 12px 28px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.98rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-    }
-    .btn:active { transform: scale(0.97); }
-    .btn-primary {
-      background: linear-gradient(135deg, #2b6cb0, #4299e1);
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(66,153,225,0.35);
-      flex: 1;
-    }
-    .btn-primary:hover { background: linear-gradient(135deg, #2c5282, #3182ce); }
-    .btn-secondary {
-      background: #edf2f7;
-      color: #4a5568;
-      border: 1.5px solid #cbd5e0;
-    }
-    .btn-secondary:hover { background: #e2e8f0; }
-
-    /* ── Success Message ── */
-    .success-message {
-      display: none;
-      background: #f0fff4;
-      border: 1.5px solid #68d391;
-      border-radius: 8px;
-      padding: 18px 22px;
-      margin-top: 20px;
-      color: #276749;
-      font-size: 0.95rem;
-    }
-    .success-message .checkmark { font-size: 1.4rem; margin-right: 8px; }
-
-    /* ── Error Message ── */
-    .error-message {
-      display: none;
-      background: #fff5f5;
-      border: 1.5px solid #fc8181;
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin-top: 14px;
-      color: #c53030;
-      font-size: 0.9rem;
-    }
-
-    /* ── Footer ── */
-    footer {
-      background: #1a365d;
-      color: #a0aec0;
-      text-align: center;
-      padding: 20px;
-      font-size: 0.85rem;
-    }
-    footer a { color: #90cdf4; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      .consent-card { padding: 24px 20px; }
-      header { flex-direction: column; gap: 12px; }
-      .btn-group { flex-direction: column; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Consent Form</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="container">
+        <div class="form-wrapper">
+            <header class="form-header">
+                <h1>Client Consent Form</h1>
+                <p class="form-subtitle">Please read and agree to the terms below</p>
+            </header>
 
-<!-- ───── HEADER ───── -->
-<header>
-  <div class="logo">Consent<span>Hub</span></div>
-  <nav>
-    <a href="#">Home</a>
-    <a href="#">Privacy Policy</a>
-    <a href="#">Contact</a>
-  </nav>
-</header>
+            <form id="consentForm" class="consent-form">
+                <!-- Client Information Section -->
+                <section class="form-section">
+                    <h2>Client Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
 
-<!-- ───── HERO ───── -->
-<div class="hero">
-  <h1>🔒 Your Privacy, Your Choice</h1>
-  <p>We are committed to protecting your personal data. Please review and manage your consent preferences below.</p>
-</div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
 
-<!-- ───── MAIN CONTENT ───── -->
-<main>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
 
-  <!-- Info Box -->
-  <div class="info-box">
-    <strong>ℹ️ Why We Need Your Consent</strong>
-    We collect and process your personal data only with your explicit permission, in compliance with
-    <strong>GDPR</strong> and <strong>CCPA</strong>. You may update or withdraw your consent at any time.
-  </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
 
-  <!-- Consent Form Card -->
-  <div class="consent-card">
-    <h2>📋 Personal Information</h2>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth *</label>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                </section>
 
-    <form id="consentForm" novalidate>
+                <!-- Consent Items Section -->
+                <section class="form-section">
+                    <h2>Consent Items</h2>
+                    <p class="section-description">Please indicate your consent to the following:</p>
 
-      <!-- Name -->
-      <div class="form-group">
-        <label for="fullName">Full Name <span class="required">*</span></label>
-        <input type="text" id="fullName" name="fullName"
-               placeholder="e.g. Jane Doe" autocomplete="name" required />
-      </div>
+                    <div class="consent-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="consentTOS" value="true" required>
+                            <span class="checkbox-custom"></span>
+                            <span class="label-text">I have read and agree to the Terms of Service *</span>
+                        </label>
+                    </div>
 
-      <!-- Email -->
-      <div class="form-group">
-        <label for="email">Email Address <span class="required">*</span></label>
-        <input type="email" id="email" name="email"
-               placeholder="e.g. jane@example.com" autocomplete="email" required />
-      </div>
+                    <div class="consent-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="consentPrivacy" value="true" required>
+                            <span class="checkbox-custom"></span>
+                            <span class="label-text">I have read and agree to the Privacy Policy *</span>
+                        </label>
+                    </div>
 
-      <!-- Consent Options -->
-      <h2 style="margin-top:28px;">✅ Consent Preferences</h2>
-      <p style="font-size:0.88rem;color:#718096;margin-bottom:14px;">
-        Please select what you agree to. No boxes are pre-checked — your choice must be explicit.
-      </p>
+                    <div class="consent-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="consentMarketing" value="true">
+                            <span class="checkbox-custom"></span>
+                            <span class="label-text">I consent to receive marketing communications</span>
+                        </label>
+                    </div>
 
-      <div class="consent-options">
+                    <div class="consent-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="consentDataProcessing" value="true" required>
+                            <span class="checkbox-custom"></span>
+                            <span class="label-text">I consent to the processing and storage of my personal data *</span>
+                        </label>
+                    </div>
+                </section>
 
-        <!-- Option 1 -->
-        <label class="consent-item" for="consentMarketing">
-          <input type="checkbox" id="consentMarketing" name="consentMarketing" />
-          <div class="item-text">
-            <strong>📧 Marketing Communications <span class="badge badge-optional">Optional</span></strong>
-            <p>Receive promotional emails, newsletters, and special offers tailored to your interests.</p>
-          </div>
-        </label>
+                <!-- Terms & Conditions Section -->
+                <section class="form-section">
+                    <h2>Terms & Conditions</h2>
+                    <div class="terms-box">
+                        <p><strong>1. Agreement</strong></p>
+                        <p>By signing this consent form, you agree to the terms and conditions outlined herein. This consent is voluntarily given.</p>
+                        
+                        <p><strong>2. Data Protection</strong></p>
+                        <p>Your personal information will be collected, processed, and stored in accordance with applicable data protection laws. We are committed to protecting your privacy and ensuring the confidentiality of your data.</p>
+                        
+                        <p><strong>3. Services</strong></p>
+                        <p>You acknowledge that you are entering into an agreement to receive services. You understand the nature, scope, and potential risks associated with these services.</p>
+                        
+                        <p><strong>4. Liability</strong></p>
+                        <p>You agree to hold harmless and indemnify us from any claims, damages, or losses that may arise from your participation in our services.</p>
+                        
+                        <p><strong>5. Modification</strong></p>
+                        <p>We reserve the right to modify these terms at any time. Continued use of our services following modifications constitutes acceptance of the updated terms.</p>
+                    </div>
+                </section>
 
-        <!-- Option 2 -->
-        <label class="consent-item" for="consentAnalytics">
-          <input type="checkbox" id="consentAnalytics" name="consentAnalytics" />
-          <div class="item-text">
-            <strong>📊 Analytics & Performance <span class="badge badge-optional">Optional</span></strong>
-            <p>Allow us to collect anonymized usage data to improve our products and services.</p>
-          </div>
-        </label>
+                <!-- Signature Section -->
+                <section class="form-section">
+                    <h2>Signature</h2>
+                    
+                    <div class="form-group">
+                        <label for="date">Date of Consent *</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
 
-        <!-- Option 3 -->
-        <label class="consent-item" for="consentThirdParty">
-          <input type="checkbox" id="consentThirdParty" name="consentThirdParty" />
-          <div class="item-text">
-            <strong>🤝 Third-Party Data Sharing <span class="badge badge-optional">Optional</span></strong>
-            <p>Allow trusted partners to contact you with relevant offers and services.</p>
-          </div>
-        </label>
+                    <div class="form-group">
+                        <label>Digital Signature *</label>
+                        <p class="signature-note">Please type your full name as your digital signature</p>
+                        <input type="text" id="signature" name="signature" placeholder="Full Name" required>
+                    </div>
 
-        <!-- Option 4 — Required -->
-        <label class="consent-item" for="consentTerms">
-          <input type="checkbox" id="consentTerms" name="consentTerms" required />
-          <div class="item-text">
-            <strong>📄 Terms & Privacy Policy <span class="badge badge-required">Required</span></strong>
-            <p>I have read and agree to the <a href="#" onclick="return false;">Privacy Policy</a>
-               and <a href="#" onclick="return false;">Terms of Service</a>.</p>
-          </div>
-        </label>
+                    <p class="signature-declaration">
+                        I hereby acknowledge that I have read, understood, and agree to the terms and conditions outlined in this consent form.
+                    </p>
+                </section>
 
-      </div>
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    <button type="submit" class="btn btn-primary">Submit Consent</button>
+                </div>
+            </form>
 
-      <!-- Withdraw Consent -->
-      <div class="withdraw-section">
-        <h3>⚠️ Right to Withdraw Consent</h3>
-        <p>
-          You can withdraw any consent at any time by visiting your
-          <a href="#">account settings</a> or by emailing us at
-          <a href="mailto:privacy@conserthub.com">privacy@conserthub.com</a>.
-          Withdrawal will not affect the lawfulness of processing before withdrawal.
-        </p>
-      </div>
-
-      <!-- Privacy Note -->
-      <p class="privacy-note">
-        Your data is stored securely and encrypted. We do not sell your personal data.
-        For full details, read our <a href="#">Privacy Policy</a>.
-        Fields marked with <span style="color:#e53e3e;font-weight:700;">*</span> are mandatory.
-      </p>
-
-      <!-- Error Message -->
-      <div class="error-message" id="errorMessage">
-        ❌ Please fill in all required fields and accept the Terms & Privacy Policy before submitting.
-      </div>
-
-      <!-- Buttons -->
-      <div class="btn-group">
-        <button type="submit" class="btn btn-primary">✅ Submit Consent Preferences</button>
-        <button type="button" class="btn btn-secondary" onclick="resetForm()">🔄 Reset</button>
-      </div>
-
-      <!-- Success Message -->
-      <div class="success-message" id="successMessage">
-        <span class="checkmark">✅</span>
-        <strong>Thank you!</strong> Your consent preferences have been saved securely.
-        A confirmation email has been sent to your address. You may update your preferences at any time.
-      </div>
-
-    </form>
-  </div>
-
-</main>
-
-<!-- ───── FOOTER ───── -->
-<footer>
-  <p>© 2026 ConsentHub · <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="#">Contact Us</a></p>
-  <p style="margin-top:6px;">This website is GDPR & CCPA compliant. Your data is protected.</p>
-</footer>
-
-<!-- ───── JAVASCRIPT ───── -->
-<script>
-  const form           = document.getElementById('consentForm');
-  const errorMessage   = document.getElementById('errorMessage');
-  const successMessage = document.getElementById('successMessage');
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const fullName     = document.getElementById('fullName').value.trim();
-    const email        = document.getElementById('email').value.trim();
-    const consentTerms = document.getElementById('consentTerms').checked;
-
-    // Validation
-    if (!fullName || !email || !consentTerms) {
-      errorMessage.style.display   = 'block';
-      successMessage.style.display = 'none';
-      return;
-    }
-
-    // Email format check
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      errorMessage.textContent     = '❌ Please enter a valid email address.';
-      errorMessage.style.display   = 'block';
-      successMessage.style.display = 'none';
-      return;
-    }
-
-    // Success
-    errorMessage.style.display   = 'none';
-    successMessage.style.display = 'block';
-    successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-    // Log consent (in production, send to server via fetch/axios)
-    const consentData = {
-      fullName,
-      email,
-      timestamp       : new Date().toISOString(),
-      consentMarketing: document.getElementById('consentMarketing').checked,
-      consentAnalytics: document.getElementById('consentAnalytics').checked,
-      consentThirdParty: document.getElementById('consentThirdParty').checked,
-      consentTerms,
-    };
-    console.log('Consent Recorded:', consentData);
-  });
-
-  function resetForm() {
-    form.reset();
-    errorMessage.style.display   = 'none';
-    successMessage.style.display = 'none';
-    errorMessage.textContent     =
-      '❌ Please fill in all required fields and accept the Terms & Privacy Policy before submitting.';
-  }
-</script>
-
-</body>
-</html>
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message" style="display: none;">
+                <div class="success-content">
+                    <div class="success-icon">✓</div>
+                    <h3>Consent Form Submitted</h3>
+                    <p>Thank you, <span id="client*
